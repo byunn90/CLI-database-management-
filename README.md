@@ -1,2 +1,2 @@
-# taff-training-program
+# staff-training-program
 Porgram
