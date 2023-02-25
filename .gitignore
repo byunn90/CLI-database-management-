@@ -1,3 +1,4 @@
 node_modules
 .env
-config.js
+./db/config.js
+public/print.js
