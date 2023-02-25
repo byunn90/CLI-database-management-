@@ -1,7 +1,7 @@
 {
   "name": "taff-training-program",
   "version": "1.0.0",
-  "description": "## Your Task",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -18,6 +18,9 @@
   },
   "homepage": "https://github.com/byunn90/taff-training-program#readme",
   "dependencies": {
+    "console.table": "^0.10.0",
+    "dotenv": "^16.0.3",
+    "inquirer": "^6.3.1",
     "mysql2": "^3.1.2"
   }
 }
