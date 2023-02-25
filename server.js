@@ -38,9 +38,12 @@ const newIndustry = () => {
       viewAllRoles();
     } else if (data.role === "Quit") {
       countDownAndQuit();
+    } else if (data.role === "Add Employee") {
+      addEmployee();
     }
   });
 };
+
 function viewDepartments() {
   connection.query("SELECT * FROM department", (error, rows) => {
     if (error) {
@@ -62,19 +65,21 @@ function viewAllEmployees() {
   });
 }
 function viewAllRoles() {
-  connection.query("SELECT * FROM role", (error, rows) => {
-    if (error) {
-      console.log(error);
-    } else {
-      console.table(rows);
-      newIndustry();
+  connection.query(
+    "SELECT id, title, department_id, salary FROM role",
+    (error, rows) => {
+      if (error) {
+        console.log(error);
+      } else {
+        console.table(rows);
+        newIndustry();
+      }
     }
-  });
+  );
 }
 const quit = () => {
   console.log("GoodBye");
-  // code to close the database connection, if needed
-  process.exit(); // exit the Node.js process
+  process.exit();
 };
 
 const countDownAndQuit = () => {
@@ -114,43 +119,49 @@ function addDepartments() {
     });
 }
 // Working progress
-// function addEmployee() {
-//   inquirer
-//     .prompt([
-//       {
-//         type: "input",
-//         message: "Enter First name",
-//         name: "first_name",
-//       },
-//       {
-//         type: "input",
-//         message: "Enter last name",
-//         name: "last_name",
-//       },
-//       {
-//         type: "input",
-//         message: "Enter department",
-//         name: "department",
-//       },
-//       {
-//         type: "input",
-//         message: "Enter salary",
-//         name: "salary",
-//       },
-//     ])
-//     .then((data) => {
-//       connection.query(
-//         "INSERT INTO employee(first_name, last_name, role_id) values(?, ?, ?)",
-//         [data.firstname, data.lastname, data.role_id],
-//         (error, rows) => {
-//           if (error) {
-//             console.log(error);
-//           } else {
-//             console.log("Employee added");
-//           }
-//         }
-//       );
-//     });
-// }
+function addEmployee() {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        message: "Enter First name",
+        name: "first_name",
+      },
+      {
+        type: "input",
+        message: "Enter last name",
+        name: "last_name",
+      },
+      {
+        type: "input",
+        message: "Enter role id",
+        name: "role_id",
+      },
+      {
+        type: "input",
+        message: "Enter manager id",
+        name: "manager_id",
+      },
+    ])
+    .then((data) => {
+      connection.query(
+        "INSERT INTO employee(first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)",
+        [
+          data.first_name,
+          data.last_name,
+          data.role_id,
+          data.manager_id || null,
+        ],
+        (error, rows) => {
+          if (error) {
+            console.log(error);
+          } else {
+            console.log("Employee added");
+            newIndustry();
+          }
+        }
+      );
+    });
+}
 
 newIndustry();
