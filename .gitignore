@@ -2,4 +2,4 @@ node_modules
 .env
 taff-training-program\db\config.js
 public/print.js
-server.js
+/server.js
