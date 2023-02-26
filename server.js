@@ -22,9 +22,9 @@ const promptUser = () => {
     },
   ]);
 };
+
 console.log(printjs.myspongeBob);
 const newIndustry = () => {
-  // console.log("What would you like to do?");
   promptUser().then((data) => {
     console.log(data);
     if (data.role === "View All Departments") {
@@ -44,6 +44,30 @@ const newIndustry = () => {
     }
   });
 };
+function addDepartments() {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        message: "What is the department Name?",
+        name: "department",
+      },
+    ])
+    .then((data) => {
+      connection.query(
+        "INSERT INTO department(name) values(?)",
+        [data.department],
+        (error, rows) => {
+          if (error) {
+            console.log(error);
+          } else {
+            console.log("Department added");
+            newIndustry();
+          }
+        }
+      );
+    });
+}
 
 function viewDepartments() {
   connection.query("SELECT * FROM department", (error, rows) => {
@@ -68,7 +92,6 @@ function viewAllEmployees() {
     }
   );
 }
-// Working progress UpdateEmployeeRole() {}
 
 // Working progress
 function addRole() {
@@ -155,30 +178,7 @@ const countDownAndQuit = () => {
     }
   }, 1000);
 };
-function addDepartments() {
-  inquirer
-    .prompt([
-      {
-        type: "input",
-        message: "What is the department Name?",
-        name: "department",
-      },
-    ])
-    .then((data) => {
-      connection.query(
-        "INSERT INTO department(name) values(?)",
-        [data.department],
-        (error, rows) => {
-          if (error) {
-            console.log(error);
-          } else {
-            console.log("Department added");
-            newIndustry();
-          }
-        }
-      );
-    });
-}
+
 function addEmployee() {
   inquirer
     .prompt([
@@ -195,44 +195,49 @@ function addEmployee() {
       {
         type: "list",
         name: "role",
-        message: "Which department does the new role belong to?",
+        message: "Select a role",
         choices: [
-          "software engineer",
           "Sales Manager",
-          "Marketing coordinator",
-          "Data Analysis",
+          "Marketing Coordinator",
+          "Data Anaylsis",
           "programmer",
+          "Software engineer",
         ],
       },
       {
-        type: "list",
-        name: "manager",
-        message: "Who is your manager?",
-        choices: [
-          "John Doe",
-          "Jane Smith",
-          "Bob Johnson",
-          "Alice Lee",
-          "Peter Kim",
-          "Karen Chen",
-        ],
+        type: "input",
+        message: "Enter manager's ID (leave blank if none)",
+        name: "manager_id",
       },
     ])
     .then((data) => {
       connection.query(
-        "INSERT INTO employee(first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)",
-        [
-          data.first_name,
-          data.last_name,
-          data.role_id,
-          data.manager_id || null,
-        ],
-        (error, rows) => {
-          if (error) {
-            console.log(error);
+        "SELECT id FROM role WHERE title = ?",
+        [data.role],
+        (roleErr, roleResults) => {
+          if (roleErr) {
+            console.log(roleErr);
+          } else if (roleResults.length === 0) {
+            console.log(`Role '${data.role}' not found in database`);
           } else {
-            console.log("Employee added");
-            newIndustry();
+            const roleId = roleResults[0].id;
+            connection.query(
+              "INSERT INTO employee(first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)",
+              [
+                data.first_name,
+                data.last_name,
+                roleId,
+                data.manager_id || null,
+              ],
+              (insertErr, insertResults) => {
+                if (insertErr) {
+                  console.log(insertErr);
+                } else {
+                  console.log("Employee added");
+                  newIndustry();
+                }
+              }
+            );
           }
         }
       );
