@@ -193,14 +193,29 @@ function addEmployee() {
         name: "last_name",
       },
       {
-        type: "input",
-        message: "Enter role id",
-        name: "role_id",
+        type: "list",
+        name: "role",
+        message: "Which department does the new role belong to?",
+        choices: [
+          "software engineer",
+          "Sales Manager",
+          "Marketing coordinator",
+          "Data Analysis",
+          "programmer",
+        ],
       },
       {
-        type: "input",
-        message: "Enter manager id",
-        name: "manager_id",
+        type: "list",
+        name: "manager",
+        message: "Who is your manager?",
+        choices: [
+          "John Doe",
+          "Jane Smith",
+          "Bob Johnson",
+          "Alice Lee",
+          "Peter Kim",
+          "Karen Chen",
+        ],
       },
     ])
     .then((data) => {
