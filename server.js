@@ -22,9 +22,8 @@ const promptUser = () => {
     },
   ]);
 };
-
+console.log(printjs.myspongeBob);
 const newIndustry = () => {
-  // console.log(printjs.myspongeBob);
   // console.log("What would you like to do?");
   promptUser().then((data) => {
     console.log(data);
@@ -40,6 +39,8 @@ const newIndustry = () => {
       countDownAndQuit();
     } else if (data.role === "Add Employee") {
       addEmployee();
+    } else if (data.role === "Add Role") {
+      addRole();
     }
   });
 };
@@ -55,18 +56,8 @@ function viewDepartments() {
   });
 }
 function viewAllEmployees() {
-  connection.query("SELECT * FROM employee", (error, rows) => {
-    if (error) {
-      console.log(error);
-    } else {
-      console.table(rows);
-      newIndustry();
-    }
-  });
-}
-function viewAllRoles() {
   connection.query(
-    "SELECT id, title, department_id, salary FROM role",
+    "SELECT emp.id, emp.first_name, emp.last_name, role.title, dept.name as department, role.salary, CONCAT(manager.first_name, ' ', manager.last_name) AS manager FROM employee emp JOIN role ON emp.role_id = role.id JOIN department dept ON role.department_id = dept.id LEFT JOIN employee manager ON emp.manager_id = manager.id",
     (error, rows) => {
       if (error) {
         console.log(error);
@@ -77,6 +68,76 @@ function viewAllRoles() {
     }
   );
 }
+// Working progress UpdateEmployeeRole() {}
+
+// Working progress
+function addRole() {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "title",
+        message: "What is the title of the new role?",
+        validate: function (input) {
+          if (input.trim() === "") {
+            return "Please provide a title for the new role.";
+          }
+          return true;
+        },
+      },
+      {
+        type: "input",
+        name: "salary",
+        message: "What is the salary for the new role?",
+        validate: function (input) {
+          if (isNaN(input) || input.trim() === "") {
+            return "Please provide a valid number for the salary.";
+          }
+          return true;
+        },
+      },
+      {
+        type: "list",
+        name: "department_id",
+        message: "Which department does the new role belong to?",
+        choices: [
+          { name: "Sales Manager", value: 1 },
+          { name: "Marketing Coordinator", value: 2 },
+          { name: "Data Analysis", value: 3 },
+          { name: "Programmer", value: 4 },
+        ],
+      },
+    ])
+    .then((answers) => {
+      connection.query(
+        "INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)",
+        [answers.title, answers.salary, answers.department_id],
+        (error, result) => {
+          if (error) {
+            console.log(error);
+          } else {
+            console.log(`New role ${answers.title} added successfully!`);
+            newIndustry();
+          }
+        }
+      );
+    });
+}
+
+function viewAllRoles() {
+  connection.query(
+    "SELECT role.id, role.title, department.name as department, role.salary FROM role JOIN department ON role.department_id = department.id",
+    (error, rows) => {
+      if (error) {
+        console.log(error);
+      } else {
+        console.table(rows);
+        newIndustry();
+      }
+    }
+  );
+}
+
 const quit = () => {
   console.log("GoodBye");
   process.exit();
@@ -118,7 +179,6 @@ function addDepartments() {
       );
     });
 }
-// Working progress
 function addEmployee() {
   inquirer
     .prompt([
