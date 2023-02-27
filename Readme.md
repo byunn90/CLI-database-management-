@@ -1,4 +1,4 @@
-# 👷‍♀️👷‍♂️ Staff-Trainning-program
+# 👷‍♀️👷‍♂️ CLI database management
 
 ![alt text](./public/images/Department.png)
 
