@@ -30,10 +30,10 @@ No tests where taken at this time
 
 ## Usage:
 
-1. Make sure you have Node.js and MySQL installed on your machine.
-2. Create a new database in MySQL by running the code in the schema.sql file in your MySQL client.
+1. Make sure you have Node.js and MySQL2 installed on your machine.
+2. Create a new database in MySQL2 by running the code in the schema.sql file in your MySQL client.
 3. Populate the database with my sample or your own data by running the code in the insert.sql file in your MySQL client.
-4. Create a .env file in the root of the project folder and add the following variables to it, replacing the values with your own MySQL username and password:
+4. Create a .env file in the root of the project folder and add the following variables to it, replacing the values with your own MySQL2 username and password:
 5. Run npm install in the project directory to install the necessary dependencies.
 6. Start the app by running npm start.
 7. You will be presented with a list of options for managing employee information. Select the option you want by using the arrow keys and pressing enter.
@@ -42,6 +42,8 @@ No tests where taken at this time
 9. After completing the action, you will be taken back to the main menu to select another option or quit the quit option will give you a count down timer 3 - 1 that will after exit the application.
 
 # Video
+
+https://www.youtube.com/watch?v=gWJmkymTJas
 
 ## Contact-Details
 
